@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramo de Girasoles para Ita</title>
+    <style>
+        body {
+            background-color: #f0f8ff; /* Fondo azul claro */
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+        #canvas {
+            background-color: white;
+            margin: 20px auto;
+            display: block;
+            border: 2px solid #ffe4b5; /* Borde crema */
+        }
+        h1 {
+            font-size: 30px;
+            color: #ff69b4; /* Rosa fuerte */
+        }
+        h2 {
+            font-size: 20px;
+            color: #4682b4; /* Azul profundo */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Para Ita, un ramo de girasoles especial</h1>
+    <h2>Con amor, en este 21 de septiembre</h2>
+    <canvas id="canvas" width="500" height="800"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let windAngle = 0; // Ángulo para simular el viento
+
+        // Dibujar un pétalo
+        function dibujarPetalo(x, y, radioX, radioY, angulo, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.ellipse(x, y, radioX, radioY, angulo, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Dibujar el centro del girasol
+        function dibujarCentro(x, y) {
+            ctx.fillStyle = '#4B3621'; // Centro marrón oscuro
+            ctx.beginPath();
+            ctx.arc(x, y, 30, 0, Math.PI * 2); // Centro del girasol
+            ctx.fill();
+        }
+
+        // Dibujar el tallo del girasol
+        function dibujarTallo(x, y, largo, inclinacion) {
+            ctx.save();
+            ctx.translate(x, y); // Punto de inicio del tallo
+            ctx.rotate(inclinacion); // Rotar para simular el movimiento del viento
+            ctx.fillStyle = 'green';
+            ctx.fillRect(0, 0, 10, largo); // Tallo largo
+            ctx.restore();
+        }
+
+        // Dibujar la envoltura del ramo
+        function dibujarEnvoltura() {
+            ctx.fillStyle = '#DCDCDC'; // Color gris claro de la tela
+            ctx.beginPath();
+            ctx.moveTo(180, 550);
+            ctx.lineTo(320, 550);
+            ctx.lineTo(420, 750);
+            ctx.lineTo(80, 750);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        // Dibujar una hoja
+        function dibujarHoja(x, y, radioX, radioY, angulo) {
+            ctx.fillStyle = 'green';
+            ctx.beginPath();
+            ctx.ellipse(x, y, radioX, radioY, angulo, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Dibujar un girasol completo con movimiento
+        function dibujarGirasol(x, y, inclinacion) {
+            // Pétalos
+            const numPetalos = 20;
+            const radioGrande = 50;
+            const radioPequeno = 20;
+
+            ctx.save();
+            ctx.translate(x, y); // Posición base del girasol
+            ctx.rotate(inclinacion); // Inclinación para simular viento
+
+            for (let i = 0; i < numPetalos; i++) {
+                const angulo = (i * Math.PI * 2) / numPetalos;
+                const px = Math.cos(angulo) * 60;
+                const py = Math.sin(angulo) * 60;
+                dibujarPetalo(px, py, radioGrande, radioPequeno, angulo, '#FFD700'); // Pétalos dorados
+            }
+
+            // Centro del girasol
+            dibujarCentro(0, 0);
+            ctx.restore();
+
+            // Tallo
+            dibujarTallo(x - 5, y + 60, 200, inclinacion); // Tallo bajo el girasol
+
+            // Hojas en el tallo
+            dibujarHoja(x - 40, y + 200, 30, 60, -0.5);
+            dibujarHoja(x + 35, y + 250, 30, 60, 0.5);
+        }
+
+        // Función principal para dibujar el ramo
+        function dibujarRamo() {
+            // Limpiar el canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Envoltura del ramo
+            dibujarEnvoltura();
+
+            // Variar el ángulo para simular el viento
+            let inclinacionViento = Math.sin(windAngle) * 0.1; // Inclinación del viento
+
+            // Dibujar varios girasoles con movimiento de viento
+            dibujarGirasol(250, 200, inclinacionViento);
+            dibujarGirasol(200, 300, inclinacionViento * 0.9);
+            dibujarGirasol(300, 300, inclinacionViento * 1.1);
+            dibujarGirasol(180, 400, inclinacionViento * 0.8);
+            dibujarGirasol(320, 400, inclinacionViento * 1.2);
+
+            // Incrementar el ángulo del viento para la próxima animación
+            windAngle += 0.05;
+
+            // Animar
+            requestAnimationFrame(dibujarRamo);
+        }
+
+        // Iniciar la animación del ramo
+        dibujarRamo();
+    </script>
+</body>
+</html>
